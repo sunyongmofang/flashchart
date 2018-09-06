@@ -9,7 +9,7 @@ axios.interceptors.response.use(res => {
 export default {
   install (Vue, options) {
     const instance = axios.create({
-      baseURL: 'https://www.easy-mock.com/mock/5b89099600a2ab2823b8b505/flashchart',
+      baseURL: 'http://127.0.0.1:8000',
       timeout: 20000,
       validateStatus: function (status) {
         return status < 500
