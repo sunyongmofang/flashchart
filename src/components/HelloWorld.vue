@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <el-select v-model="database" placeholder="请选择" @change="get_value()">
+    <el-select v-model="database" placeholder="请选择" @change="get_value();increment()">
       <el-option v-for="db in databases" :key="db.datname" :label="db.datname" :value="db.datname"></el-option>
     </el-select>
 
@@ -19,6 +19,8 @@
       </el-table>
     </div>
 
+    <div>{{ test }}</div>
+
   </div>
 </template>
 
@@ -27,12 +29,18 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import PluginAxios from '@/plugin/axios'
 import 'element-ui/lib/theme-chalk/index.css'
+import { mapState } from 'vuex'
 
 Vue.use(PluginAxios)
 Vue.use(ElementUI)
 
 export default {
   name: 'HelloWorld',
+  computed: {
+    ...mapState('flashchart/test', [
+      'test'
+    ])
+  },
   methods: {
     get_value: function () {
       if (this.database && this.schema) {
