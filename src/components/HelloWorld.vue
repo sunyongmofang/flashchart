@@ -44,6 +44,16 @@
       </el-table>
     </div>
 
+    <el-input
+  type="textarea"
+  :rows="2"
+  placeholder="请输入内容"
+  v-model="textarea">
+</el-input>
+
+ <el-button type="primary" @click="postText()">主要按钮</el-button>
+ <el-button type="primary" @click="getSqlData()">获取sqldata</el-button>
+
     <div>{{ test }}</div>
 
   </div>
@@ -69,6 +79,17 @@ export default {
   methods: {
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
+    },
+    postText: function () {
+      console.log(this.textarea)
+      this.$axios.post('/test/test', { sql: this.textarea, test: 123 }).then(res => {
+        console.log(res.data)
+      })
+    },
+    getSqlData: function () {
+      this.$axios.get('/prest/_QUERIES/sunyong/test').then(res => {
+        console.log(res.data)
+      })
     },
     get_value: function () {
       if (this.database && this.schema) {
@@ -111,7 +132,8 @@ export default {
       table: '',
       tabledata: [],
       field: [],
-      activeIndex: '1'
+      activeIndex: '1',
+      textarea: ''
     }
   }
 }

@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 from flask import Flask
+from flask import jsonify
 from flask import request
-from flask import redirect
 import requests as req
 import json
 
@@ -24,13 +20,17 @@ get_persistent_code = '%s/get_persistent_code?access_token=%s'
 get_sns_token = '%s/get_sns_token?access_token=%s'
 get_user_info = '%s/getuserinfo?sns_token=%s'
 
-@app.route('/index')
-def hello_world():
-    qrUrl = 'https://oapi.dingtalk.com/connect/qrconnect?appid=%s&response_type=code&scope=snsapi_login&redirect_uri=%s' % (appId, callbakUrl)
-    return redirect(qrUrl)
+@app.route('/test', methods=['POST'])
+def test():
+    file_path = '/Users/sunyong/Public/worker/docker/prest/tmp/sunyong/test.read.sql'
+    data = json.loads([i for i in request.form][0])
+    sql = data['sql']
+    with open(file_path, 'w') as f:
+        f.write(str(sql))
+    return 'test'
 
-@app.route('/login')
-def login():
+@app.route('/oauth')
+def oauth():
     tmp_auth_code_map = {'tmp_auth_code': request.args.get('code')}
 
     res = req.get(get_access_token_url % (baseUrl, appId, appSecret))
@@ -45,7 +45,7 @@ def login():
     res = req.get(get_user_info % (baseUrl, sns_token))
     user_info = json.loads(res.content)['user_info']
     
-    return str(user_info)
+    return jsonify(user_info)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
