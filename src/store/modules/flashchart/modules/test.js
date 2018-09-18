@@ -52,7 +52,11 @@ export default {
     execSql ({ commit, state }, { vm, textarea }) {
       vm.$axios.post('/test/test', { sql: textarea }).then(res => {
         vm.$axios.get('/prest/_QUERIES/sunyong/' + res.data).then(resp => {
-          commit('setTableData', resp.data)
+          if (resp.status === 200) {
+            commit('setTableData', resp.data)
+          } else {
+            commit('setTableData', [])
+          }
         })
       })
     }

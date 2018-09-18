@@ -1,25 +1,28 @@
 <template>
-  <div>
+  <el-container>
 
-    <el-select v-model="database" placeholder="请选择database" @change="getTables()">
-      <el-option v-for="db in databases" :key="db.datname" :label="db.datname" :value="db.datname"></el-option>
-    </el-select>
+    <el-aside>
+      <el-select v-model="database" placeholder="请选择database" @change="getTables()">
+        <el-option v-for="db in databases" :key="db.datname" :label="db.datname" :value="db.datname"></el-option>
+      </el-select>
 
-    <el-select v-model="schema" placeholder="请选择schema" @change="getTables()">
-      <el-option v-for="sm in schemas" :key="sm.schema_name" :label="sm.schema_name" :value="sm.schema_name"></el-option>
-    </el-select>
+      <el-select v-model="schema" placeholder="请选择schema" @change="getTables()">
+        <el-option v-for="sm in schemas" :key="sm.schema_name" :label="sm.schema_name" :value="sm.schema_name"></el-option>
+      </el-select>
 
-    <el-select v-model="table" placeholder="请选择table" @change="getData()">
-      <el-option v-for="tb in tables" :key="tb.name" :label="tb.name" :value="tb.name"></el-option>
-    </el-select>
+      <el-select v-model="table" placeholder="请选择table" @change="getData()">
+        <el-option v-for="tb in tables" :key="tb.name" :label="tb.name" :value="tb.name"></el-option>
+      </el-select>
+    </el-aside>
 
-    <FlashTable :tableData="tableData" :field="field"></FlashTable>
+    <el-main>
+      <FlashTable :tableData="tableData" :field="field"></FlashTable>
 
-    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
+      <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
 
-    <el-button type="primary" @click="postText()">执行sql</el-button>
-
-  </div>
+      <el-button type="primary" @click="postText()">执行sql</el-button>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
