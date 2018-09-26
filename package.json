@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@antv/data-set": "^0.9.4",
-    "@antv/g2": "^3.2.7",
+    "@antv/g2": "^3.2.8",
     "axios": "^0.18.0",
     "element-ui": "^2.4.6",
     "vue": "^2.5.2",
