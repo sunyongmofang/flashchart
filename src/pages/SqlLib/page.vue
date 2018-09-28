@@ -4,7 +4,7 @@
     <el-header>
       <el-menu
         :default-active="activeIndex"
-        class="el-menu-demo"
+        class="head-menu"
         mode="horizontal"
         @select="handleSelect"
         background-color="#545c64"
@@ -28,9 +28,9 @@
       </el-menu>
     </el-header>
 
-    <el-container>
+    <el-main>
 
-      <el-aside>
+      <div :span="8">
         <el-select v-model="database" placeholder="请选择database" @change="getTables">
           <el-option v-for="db in databases" :key="db.datname" :label="db.datname" :value="db.datname"></el-option>
         </el-select>
@@ -42,16 +42,15 @@
         <el-select v-model="table" placeholder="请选择table" @change="getData()">
           <el-option v-for="tb in tables" :key="tb.name" :label="tb.name" :value="tb.name"></el-option>
         </el-select>
-      </el-aside>
-
-      <el-main>
+      </div>
+      <div :span="16">
         <FlashTable :tableData="tableData" :field="field"></FlashTable>
 
         <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
         <el-button type="primary" @click="postText()">执行sql</el-button>
-      </el-main>
+      </div>
 
-    </el-container>
+    </el-main>
 
   </el-container>
 </template>
@@ -114,3 +113,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.head-menu {}
+</style>
