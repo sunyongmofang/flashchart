@@ -1,119 +1,77 @@
 <template>
-  <el-container>
+  <flash-menu :activeIndex="activeIndex">
 
-    <el-header>
-      <el-menu
-        :default-active="activeIndex"
-        class="head-menu"
-        mode="horizontal"
-        @select="handleSelect"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b">
-        <el-menu-item index="1">处理中心</el-menu-item>
-        <el-submenu index="2">
-          <template slot="title">我的工作台</template>
-          <el-menu-item index="2-1">选项1</el-menu-item>
-          <el-menu-item index="2-2">选项2</el-menu-item>
-          <el-menu-item index="2-3">选项3</el-menu-item>
-          <el-submenu index="2-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="2-4-1">选项1</el-menu-item>
-            <el-menu-item index="2-4-2">选项2</el-menu-item>
-            <el-menu-item index="2-4-3">选项3</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-menu-item index="3" disabled>消息中心</el-menu-item>
-        <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
-      </el-menu>
-    </el-header>
-
-    <el-main>
-
-      <div :span="8">
-        <el-select v-model="database" placeholder="请选择database" @change="getTables">
-          <el-option v-for="db in databases" :key="db.datname" :label="db.datname" :value="db.datname"></el-option>
+    <el-row>
+      <el-col :span="8">
+        <el-select v-model="database" placeholder="请选择database" @change="schema = '';table = ''">
+          <el-option v-for="db in databases" :key="db" :label="db" :value="db"></el-option>
         </el-select>
-
-        <el-select v-model="schema" placeholder="请选择schema" @change="getTables">
-          <el-option v-for="sm in schemas" :key="sm.schema_name" :label="sm.schema_name" :value="sm.schema_name"></el-option>
+        <el-select v-model="schema" placeholder="请选择schema" @change="table = ''">
+          <el-option v-for="sm in schemas(database)" :key="sm" :label="sm" :value="sm"></el-option>
         </el-select>
-
-        <el-select v-model="table" placeholder="请选择table" @change="getData()">
-          <el-option v-for="tb in tables" :key="tb.name" :label="tb.name" :value="tb.name"></el-option>
+        <el-select v-model="table" placeholder="请选择table" @change="getFields(database, schema, table)">
+          <el-option v-for="tb in tables(database, schema)" :key="tb" :label="tb" :value="tb"></el-option>
         </el-select>
-      </div>
-      <div :span="16">
-        <FlashTable :tableData="tableData" :field="field"></FlashTable>
-
+      </el-col>
+      <el-col :span="16">
+        <flash-table :tableData="datas(database, schema, table)" :field="fields(database, schema, table)"></flash-table>
         <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
         <el-button type="primary" @click="postText()">执行sql</el-button>
-      </div>
+      </el-col>
+    </el-row>
 
-    </el-main>
-
-  </el-container>
+  </flash-menu>
 </template>
 
 <script>
 import FlashTable from '@/components/flash-table'
+import FlashMenu from '@/components/flash-menu'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import 'element-ui/lib/theme-chalk/index.css'
 
 export default {
   name: 'SqlLib',
   computed: {
-    ...mapState('flashchart/test', [
+    ...mapState('flashchart/sqllib', [
+      'dbsDescript'
+    ]),
+    ...mapGetters('flashchart/sqllib', [
       'databases',
       'schemas',
       'tables',
-      'tableData'
-    ]),
-    ...mapGetters('flashchart/test', [
-      'field'
+      'datas',
+      'fields'
     ])
   },
   components: {
-    FlashTable
+    FlashTable,
+    FlashMenu
   },
   methods: {
-    ...mapActions('flashchart/test', [
-      'setDatabases',
-      'setSchemas',
-      'setTables',
-      'setTableData',
-      'execSql'
+    ...mapActions('flashchart/sqllib', [
+      'updateDatabases',
+      'updateTableData'
     ]),
     postText: function () {
       this.execSql({ vm: this, textarea: this.textarea })
     },
-    getTables: function () {
-      this.setTables({ vm: this, database: this.database, schema: this.schema })
-      this.table = ''
-    },
-    getData: function () {
-      this.setTableData({ vm: this, database: this.database, schema: this.schema, table: this.table })
-    },
-    handleSelect: function (key, keyPath) {
-      console.log(key, keyPath)
+    getFields: function (database, schema, table) {
+      return this.updateTableData({ vm: this, database: database, schema: schema, table: table })
     }
   },
   mounted: function () {
-    this.setDatabases({ vm: this })
-    this.setSchemas({ vm: this })
+    this.updateDatabases({ vm: this })
   },
   data () {
     return {
       database: '',
       schema: '',
       table: '',
-      activeIndex: '1',
-      textarea: ''
+      activeIndex: 'sqllib',
+      textarea: '',
+      thisTableData: [],
+      thisField: []
     }
   }
 }
 </script>
-
-<style scoped>
-.head-menu {}
-</style>

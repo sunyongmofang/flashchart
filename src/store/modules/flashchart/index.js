@@ -1,8 +1,8 @@
-import test from './modules/test'
+import sqllib from './modules/sqllib'
 
 export default {
   namespaced: true,
   modules: {
-    test
+    sqllib
   }
 }
