@@ -1,62 +1,82 @@
 <template>
-  <flash-menu :activeIndex="activeIndex">
+  <div>
 
     <el-row>
       <el-col :span="8">
-        <el-select v-model="database" placeholder="请选择database" @change="schema = '';table = ''">
-          <el-option v-for="db in databases" :key="db" :label="db" :value="db"></el-option>
+        <el-select v-model="database" placeholder="请选择database" @change="changeParams">
+          <el-option v-for="db in databaseList" :key="db" :label="db" :value="db"></el-option>
         </el-select>
-        <el-select v-model="schema" placeholder="请选择schema" @change="table = ''">
-          <el-option v-for="sm in schemas(database)" :key="sm" :label="sm" :value="sm"></el-option>
+        <el-select v-model="schema" placeholder="请选择schema" @change="changeParams">
+          <el-option v-for="sm in schemaList" :key="sm" :label="sm" :value="sm"></el-option>
         </el-select>
-        <el-select v-model="table" placeholder="请选择table" @change="getFields(database, schema, table)">
-          <el-option v-for="tb in tables(database, schema)" :key="tb" :label="tb" :value="tb"></el-option>
+        <el-select v-model="table" placeholder="请选择table" @change="changeParams">
+          <el-option v-for="tb in tableList" :key="tb" :label="tb" :value="tb"></el-option>
         </el-select>
       </el-col>
       <el-col :span="16">
-        <flash-table :tableData="datas(database, schema, table)" :field="fields(database, schema, table)"></flash-table>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
+        <el-input type="textarea" :rows="4" placeholder="请输入查询sql" v-model="params['sql']"></el-input>
+        <div v-for="param in analyText" :key="param">
+          <el-input placeholder="请输入参数" v-model="params[param]">
+            <template slot="prepend">{{ param }}</template>
+          </el-input>
+        </div>
         <el-button type="primary" @click="postText()">执行sql</el-button>
+        <flash-table :tableData="datas" :field="fieldList"></flash-table>
       </el-col>
     </el-row>
 
-  </flash-menu>
+  </div>
 </template>
 
 <script>
 import FlashTable from '@/components/flash-table'
-import FlashMenu from '@/components/flash-menu'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import 'element-ui/lib/theme-chalk/index.css'
+
+const reg = /"\{{2}\.\w+\}{2}"/g
+const creg = reg.compile(reg)
 
 export default {
   name: 'SqlLib',
   computed: {
-    ...mapState('flashchart/sqllib', [
-      'dbsDescript'
+    ...mapState('flashchart/dataset', [
+      'datas'
     ]),
-    ...mapGetters('flashchart/sqllib', [
-      'databases',
-      'schemas',
-      'tables',
-      'datas',
-      'fields'
-    ])
+    ...mapGetters('flashchart/dataset', [
+      'databaseList',
+      'schemaList',
+      'tableList',
+      'fieldList'
+    ]),
+    analyText: function () {
+      if (this.params.sql && this.params.sql.match(creg)) {
+        return this.params.sql.match(creg).map((item) => item.replace(/"{{./g, '').replace(/}}"/g, ''))
+      } else {
+        return []
+      }
+    }
   },
   components: {
-    FlashTable,
-    FlashMenu
+    FlashTable
   },
   methods: {
-    ...mapActions('flashchart/sqllib', [
+    ...mapActions('flashchart/dataset', [
       'updateDatabases',
-      'updateTableData'
+      'analyParams',
+      'execSql'
     ]),
     postText: function () {
-      this.execSql({ vm: this, textarea: this.textarea })
+      this.params.filename = 'sqllib'
+      this.execSql({ vm: this, params: this.params })
     },
-    getFields: function (database, schema, table) {
-      return this.updateTableData({ vm: this, database: database, schema: schema, table: table })
+    changeParams: function (param) {
+      if (this.database === param) {
+        this.schema = ''
+        this.table = ''
+      } else if (this.schema === param) {
+        this.table = ''
+      }
+      this.analyParams({ vm: this, database: this.database, schema: this.schema, table: this.table })
     }
   },
   mounted: function () {
@@ -67,10 +87,7 @@ export default {
       database: '',
       schema: '',
       table: '',
-      activeIndex: 'sqllib',
-      textarea: '',
-      thisTableData: [],
-      thisField: []
+      params: {}
     }
   }
 }

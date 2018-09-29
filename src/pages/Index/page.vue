@@ -1,6 +1,6 @@
 <template>
   <flash-menu :activeIndex="activeIndex">
-    <h1>首页</h1>
+    <router-view/>
   </flash-menu>
 </template>
 
@@ -8,7 +8,6 @@
 import FlashMenu from '@/components/flash-menu'
 
 export default {
-  name: 'index',
   components: {
     FlashMenu
   },
@@ -16,17 +15,6 @@ export default {
     return {
       activeIndex: '/'
     }
-  },
-  methods: {
-    handleSelect (key, keyPath) {
-      console.log(key, keyPath)
-    }
   }
 }
 </script>
-
-<style scoped>
-.non-padding {
-  padding: 0;
-}
-</style>

@@ -1,8 +1,8 @@
-import sqllib from './modules/sqllib'
+import dataset from './modules/dataset'
 
 export default {
   namespaced: true,
   modules: {
-    sqllib
+    dataset
   }
 }
