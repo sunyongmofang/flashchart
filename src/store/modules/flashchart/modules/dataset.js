@@ -15,15 +15,6 @@ export default {
     },
     tableList: (state) => {
       return state.tables.map((item) => item.table)
-    },
-    fieldList: (state) => {
-      let fd = []
-      if (state.datas.length !== 0) {
-        for (let i in state.datas[0]) {
-          fd.push(i)
-        }
-      }
-      return fd
     }
   },
   mutations: {
@@ -63,12 +54,13 @@ export default {
         })
       }
     },
-    execSql ({ commit, state }, { vm, params }) {
-      vm.$axios({ method: 'post', url: '/post_filename', params }).then(res => {
-        vm.$axios({ method: 'get', url: '/get_execsql', params }).then(resp => {
-          state.datas = resp.data
-        })
-      })
+    async execSql ({ commit, state }, { vm, params }) {
+      let postSqlFile, execsqlData
+      postSqlFile = await vm.$axios({ method: 'post', url: '/post_filename', params })
+      if (postSqlFile.status === 200) {
+        execsqlData = await vm.$axios({ method: 'get', url: '/get_execsql', params })
+      }
+      state.datas = execsqlData ? execsqlData.data : []
     }
   }
 }

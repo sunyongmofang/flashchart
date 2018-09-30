@@ -34,4 +34,7 @@ export default {
 .non-padding {
   padding: 0;
 }
+.el-header {
+  margin-bottom: 20px;
+}
 </style>

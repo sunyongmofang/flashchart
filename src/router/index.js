@@ -8,6 +8,7 @@ const SqlLib = () => import('@/pages/SqlLib')
 
 // 所属首页面的子路有放在这里
 const IndexChildren = [
+  { path: '', component: SqlLib },
   { path: 'sqllib', component: SqlLib }
 ]
 
