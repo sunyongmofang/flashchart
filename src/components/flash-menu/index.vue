@@ -1,12 +1,12 @@
 <template>
   <el-container>
     <el-header class="non-padding">
-      <el-menu router :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu router :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
         <el-menu-item index="/">首页</el-menu-item>
         <el-menu-item index="sqllib">sql实验室</el-menu-item>
       </el-menu>
     </el-header>
-    <el-main class="non-padding">
+    <el-main>
       <slot/>
     </el-main>
   </el-container>
@@ -21,11 +21,6 @@ export default {
       required: false,
       default: '/'
     }
-  },
-  methods: {
-    handleSelect (key, keyPath) {
-      // console.log(key, keyPath)
-    }
   }
 }
 </script>
@@ -33,8 +28,5 @@ export default {
 <style scoped>
 .non-padding {
   padding: 0;
-}
-.el-header {
-  margin-bottom: 20px;
 }
 </style>

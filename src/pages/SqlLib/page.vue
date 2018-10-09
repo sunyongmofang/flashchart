@@ -3,19 +3,19 @@
 
     <el-row>
       <el-col :span="6">
-        <el-form label-width="100px" label-position="right">
+        <el-form label-width="90px" label-position="right">
           <el-form-item label="database">
-            <el-select v-model="database" placeholder="请选择database" @change="changeParams">
+            <el-select v-model="params.database" placeholder="请选择database" @change="changeParams">
               <el-option v-for="db in databaseList" :key="db" :label="db" :value="db"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="schema">
-            <el-select v-model="schema" placeholder="请选择schema" @change="changeParams">
+            <el-select v-model="params.schema" placeholder="请选择schema" @change="changeParams">
               <el-option v-for="sm in schemaList" :key="sm" :label="sm" :value="sm"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="table">
-            <el-select v-model="table" placeholder="请选择table" @change="changeParams">
+            <el-select v-model="params.table" placeholder="请选择table" @change="changeParams">
               <el-option v-for="tb in tableList" :key="tb" :label="tb" :value="tb"></el-option>
             </el-select>
           </el-form-item>
@@ -23,7 +23,7 @@
       </el-col>
 
       <el-col :span="18">
-        <el-input type="textarea" :rows="4" placeholder="请输入查询sql" v-model="params['sql']" class="native-margin"/>
+        <el-input type="textarea" :rows="4" placeholder="请输入查询sql" v-model="params.sql" class="native-margin"/>
         <div v-for="param in analyText" :key="param" class="native-margin">
           <el-input placeholder="请输入参数" v-model="params[param]">
             <template slot="prepend">{{ param }}</template>
@@ -42,7 +42,9 @@ import FlashTable from '@/components/flash-table'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// 查找形如`"{{.xxxxx}}"`到字符串
 const reg = /"\{{2}\.\w+\}{2}"/g
+// 编译正则表达式
 const creg = reg.compile(reg)
 
 export default {
@@ -78,13 +80,13 @@ export default {
       this.execSql({ vm: this, params: this.params })
     },
     changeParams: function (param) {
-      if (this.database === param) {
-        this.schema = ''
-        this.table = ''
-      } else if (this.schema === param) {
-        this.table = ''
+      if (this.params.database === param) {
+        this.params.schema = ''
+        this.params.table = ''
+      } else if (this.params.schema === param) {
+        this.params.table = ''
       }
-      this.analyParams({ vm: this, database: this.database, schema: this.schema, table: this.table })
+      this.analyParams({ vm: this, database: this.params.database, schema: this.params.schema, table: this.params.table })
     }
   },
   mounted: function () {
@@ -92,9 +94,6 @@ export default {
   },
   data () {
     return {
-      database: '',
-      schema: '',
-      table: '',
       params: {}
     }
   }
