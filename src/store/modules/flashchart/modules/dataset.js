@@ -4,7 +4,8 @@ export default {
     databases: [],
     schemas: [],
     tables: [],
-    datas: []
+    datas: [],
+    params: {}
   },
   getters: {
     databaseList: (state) => {

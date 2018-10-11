@@ -5,11 +5,13 @@ Vue.use(Router)
 
 const Index = () => import('@/pages/Index')
 const SqlLib = () => import('@/pages/SqlLib')
+const Slice = () => import('@/pages/Slice')
 
 // 所属首页面的子路有放在这里
 const IndexChildren = [
-  { path: '', component: SqlLib },
-  { path: 'sqllib', component: SqlLib }
+  { path: '', component: Slice },
+  { path: 'sqllib', component: SqlLib },
+  { path: 'slice', component: Slice }
 ]
 
 const routes = [

@@ -52,7 +52,8 @@ export default {
   name: 'SqlLib',
   computed: {
     ...mapState('flashchart/dataset', [
-      'datas'
+      'datas',
+      'params'
     ]),
     ...mapGetters('flashchart/dataset', [
       'databaseList',
@@ -91,10 +92,8 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(({value}) => {
-        this.$message({
-          type: 'success',
-          message: '你的图表名是: ' + value
-        })
+        this.params.filename = value
+        this.$router.push('/')
       })
     },
     /**
@@ -114,11 +113,6 @@ export default {
   mounted: function () {
     // 初始化dataset.js中的数据
     this.updateDatabases({ vm: this })
-  },
-  data () {
-    return {
-      params: {}
-    }
   }
 }
 </script>
