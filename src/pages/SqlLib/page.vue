@@ -93,7 +93,7 @@ export default {
         cancelButtonText: '取消'
       }).then(({value}) => {
         this.params.filename = value
-        this.$router.push('/')
+        this.$router.push('slice')
       })
     },
     /**

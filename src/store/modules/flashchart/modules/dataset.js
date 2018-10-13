@@ -5,7 +5,12 @@ export default {
     schemas: [],
     tables: [],
     datas: [],
-    params: {}
+    params: {
+      database: '',
+      schema: '',
+      table: '',
+      sql: ''
+    }
   },
   getters: {
     databaseList: (state) => {

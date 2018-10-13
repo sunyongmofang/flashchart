@@ -2,7 +2,8 @@
   <el-container>
     <el-header class="non-padding">
       <el-menu router :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-        <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="board">看板</el-menu-item>
+        <el-menu-item index="slice">图表管理</el-menu-item>
         <el-menu-item index="sqllib">sql实验室</el-menu-item>
       </el-menu>
     </el-header>
@@ -19,7 +20,7 @@ export default {
     activeIndex: {
       type: String,
       required: false,
-      default: '/'
+      default: 'board'
     }
   }
 }

@@ -13,16 +13,12 @@ export default {
   name: 'Slice',
   computed: {
     ...mapState('flashchart/dataset', [
-      'databases'
+      'databases',
+      'datas'
     ])
   },
   components: {
     FlashTable
-  },
-  data () {
-    return {
-      params: {}
-    }
   }
 }
 </script>
